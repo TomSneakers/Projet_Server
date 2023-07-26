@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const URI = `mongodb+srv://tomdesvignes031:Cocacola69@cluster0.7fzvspl.mongodb.net/
+const URI = `mongodb+srv://tomdesvignes031:Cocacola69@cluster0.7fzvspl.mongodb.net/OFive
 `
 
 const MongoDBClient = {
