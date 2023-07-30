@@ -4,7 +4,7 @@ import mongoDBClient from './mongoClient.js';
 import Product from './models/product.js';
 import { graphqlHTTP } from 'express-graphql';
 import schema from './schemas/index.js';
-const PORT = 2021
+const PORT = 2023
 
 const app = express()
 
@@ -31,6 +31,7 @@ app.get('/products/:category', async (req, res) => {
 })
 
 app.use(cors())
+
 
 // GraphQL UI
 app.use(
