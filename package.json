@@ -19,7 +19,8 @@
     "express-validator": "^7.0.1",
     "graphql": "^14.7.0",
     "mongodb": "^5.7.0",
-    "mongoose": "^7.3.4"
+    "mongoose": "^7.3.4",
+    "react-google-login": "^5.2.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
