@@ -2,13 +2,17 @@
 // const Product = require('../models/product')
 import graphql from 'graphql'
 import Product from '../models/product.js'
+import Order from '../models/order.js'
 
 const {
     GraphQLSchema,
     GraphQLObjectType,
     GraphQLString,
     GraphQLFloat,
-    GraphQLList
+    GraphQLList,
+    GraphQLID,
+    GraphQLInputObjectType,
+    GraphQLInt,
 } = graphql
 
 const ProductType = new GraphQLObjectType({
@@ -22,6 +26,32 @@ const ProductType = new GraphQLObjectType({
     })
 })
 
+const ProductInputType = new GraphQLInputObjectType({
+    name: "ProductInput",
+    fields: () => ({
+        id: { type: GraphQLString },
+        name: { type: GraphQLString },
+        category: { type: GraphQLString },
+        filter: { type: GraphQLString },
+        price: { type: GraphQLFloat },
+        quantity: { type: GraphQLInt },
+        size: { type: GraphQLString },
+
+    })
+})
+
+const OrderType = new GraphQLObjectType({
+    name: "Order",
+    fields: () => ({
+        id: { type: GraphQLID },
+        ownerId: { type: GraphQLString },
+        date: { type: GraphQLString },
+        pickupDate: { type: GraphQLString },
+        clientDetails: { type: GraphQLString },
+        total: { type: GraphQLFloat },
+        items: { type: GraphQLList(ProductType) },
+    })
+})
 
 const RootQuery = new GraphQLObjectType({
     name: 'RootQueryType',
@@ -45,10 +75,47 @@ const RootQuery = new GraphQLObjectType({
                 return Product.find({ category: args.category })
             }
         },
+        orders: {
+            type: new GraphQLList(OrderType),
+            args: { ownerId: { type: GraphQLString } },
+            resolve(parent, args) {
+                return Order.find({ ownerId: args.ownerId })
+            }
+        }
     },
 })
+const Mutation = new GraphQLObjectType({
+    name: "Mutation",
+    fields: {
+        addOrder: {
+            type: OrderType,
+            args: {
+                id: { type: GraphQLID },
+                ownerId: { type: GraphQLString },
+                date: { type: GraphQLString },
+                pickupDate: { type: GraphQLString },
+                clientDetails: { type: GraphQLString },
+                total: { type: GraphQLFloat },
+                items: { type: GraphQLList(ProductInputType) },
+            },
+            resolve(parent, args) {
+                let order = new Order({
+                    id: args.id,
+                    ownerId: args.ownerId,
+                    date: args.date,
+                    pickupDate: args.pickupDate,
+                    clientDetails: args.clientDetails,
+                    total: args.total,
+                    items: args.items
+                });
+                return order.save();
+            }
+        }
+    }
+});
 var schema = new GraphQLSchema({
-    query: RootQuery
+    query: RootQuery,
+    mutation: Mutation,
 });
 
 export default schema;
