@@ -11,7 +11,7 @@ const MongoDBClient = {
                     useNewUrlParser: true,
                     useUnifiedTopology: true
                 })
-            client.then(() => console.log(`🎉 🎉 successfully connected to DB:`))
+            client.then(() => console.log(`🎉 🎉 successfully connected to DB`))
         } catch (e) {
             throw Error(e)
         }
