@@ -10,6 +10,10 @@ const PORT = 2023;
 const app = express();
 
 app.use(bodyParser.json());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+}));
 
 // API Rest 
 // const Product = require('./models/product');
@@ -23,7 +27,7 @@ app.get('/products', async (req, res) => {
 });
 
 app.get('/products/:category', async (req, res) => {
-    const category = req.params.category;
+    const category = req.params.category.toLowerCase();
     const products = await Product.find({category: category});
     try {
         res.send(products);
@@ -36,7 +40,7 @@ app.get('/orders', async (req, res) => {
     const orders = await Order.find({});
     try {
         res.send(orders);
-    }catch (e){
+    } catch (e) {
         res.status(500).send(e);
     }
 });
@@ -48,7 +52,22 @@ app.post('/products', async (req, res) => {
     product.save().then(r => res.send(r._id)).catch(e => res.status(500).send(e));
 });
 
-app.use(cors());
+app.put('/products/:id', async (req, res) => {
+    const id = req.params.id;
+    const {category, name, description, price, imageUrl} = req.body;
+    Product.updateOne({_id: id}, {category, name, description, price, imageUrl})
+           .then(r => res.send(r._id))
+           .catch(e => res.status(500).send(e));
+
+});
+
+app.delete('/products/:id', async (req, res) => {
+    const id = req.params.id;
+    Product.findByIdAndDelete({_id: id})
+           .then(r => res.send(r._id))
+           .catch(e => res.status(500).send(e));
+
+});
 
 app.get('/', (req, res) => {
     res.send('Hello Express! 🎉');
