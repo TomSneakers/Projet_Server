@@ -28,12 +28,19 @@ app.get('/products', async (req, res) => {
 
 app.get('/products/:category', async (req, res) => {
     const category = req.params.category.toLowerCase();
-    const products = await Product.find({category: category});
+    const products = await Product.find({ category: category });
     try {
         res.send(products);
     } catch (e) {
         res.status(500).send(e);
     }
+});
+
+app.get("/product/:id", async (req, res) => {
+    const productId = req.params.id;
+    Product.findOne({ _id: productId })
+        .then(product => res.send(product))
+        .catch(err => res.status(500).send(err))
 });
 
 app.get('/orders', async (req, res) => {
@@ -46,26 +53,26 @@ app.get('/orders', async (req, res) => {
 });
 
 app.post('/products', async (req, res) => {
-    const {category, name, description, price, imageUrl} = req.body;
-    const product = new Product({category, name, description, price, imageUrl});
+    const { category, name, description, price, imageUrl } = req.body;
+    const product = new Product({ category, name, description, price, imageUrl });
 
     product.save().then(r => res.send(r._id)).catch(e => res.status(500).send(e));
 });
 
-app.put('/products/:id', async (req, res) => {
+app.put('/product/:id', async (req, res) => {
     const id = req.params.id;
-    const {category, name, description, price, imageUrl} = req.body;
-    Product.updateOne({_id: id}, {category, name, description, price, imageUrl})
-           .then(r => res.send(r._id))
-           .catch(e => res.status(500).send(e));
+    const { category, name, description, price, imageUrl } = req.body;
+    Product.updateOne({ _id: id }, { category, name, description, price, imageUrl })
+        .then(r => res.send(r._id))
+        .catch(e => res.status(500).send(e));
 
 });
 
-app.delete('/products/:id', async (req, res) => {
+app.delete('/product/:id', async (req, res) => {
     const id = req.params.id;
-    Product.findByIdAndDelete({_id: id})
-           .then(r => res.send(r._id))
-           .catch(e => res.status(500).send(e));
+    Product.findByIdAndDelete({ _id: id })
+        .then(r => res.send(r._id))
+        .catch(e => res.status(500).send(e));
 
 });
 
