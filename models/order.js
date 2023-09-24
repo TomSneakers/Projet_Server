@@ -1,16 +1,14 @@
 import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
-    id: Number,
-    ownerId: String,
     date: Date,
+    ownerId: String,
     clientDetails: Object,
     total: Number,
     items: [
         {
-            product_id: String,
             name: String,
             price: Number,
-            quantity: Number,
+            imageUrl: String,
             size: String,
         }
     ]

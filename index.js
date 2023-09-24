@@ -28,7 +28,7 @@ app.get('/products', async (req, res) => {
 
 app.get('/products/:category', async (req, res) => {
     const category = req.params.category.toLowerCase();
-    const products = await Product.find({ category: category });
+    const products = await Product.find({category: category});
     try {
         res.send(products);
     } catch (e) {
@@ -38,9 +38,9 @@ app.get('/products/:category', async (req, res) => {
 
 app.get("/product/:id", async (req, res) => {
     const productId = req.params.id;
-    Product.findOne({ _id: productId })
-        .then(product => res.send(product))
-        .catch(err => res.status(500).send(err))
+    Product.findOne({_id: productId})
+           .then(product => res.send(product))
+           .catch(err => res.status(500).send(err));
 });
 
 app.get('/orders', async (req, res) => {
@@ -52,34 +52,43 @@ app.get('/orders', async (req, res) => {
     }
 });
 
+app.get("/order/:id", async (req, res) => {
+    const orderId = req.params.id;
+    Order.findOne({_id: orderId})
+         .then(order => {
+             res.send(order);
+         })
+         .catch(err => res.status(500).send(err));
+});
+
 app.post('/orders', async (req, res) => {
-    const { name, email, phone, address, cart } = req.body;
-    const order = new Order({ name, email, phone, address, products: cart });
+    const {clientDetails, items, total} = req.body;
+    const order = new Order({clientDetails, items, total, date: new Date()});
 
     order.save().then(r => res.send(r._id)).catch(e => res.status(500).send(e));
 });
 
 app.post('/products', async (req, res) => {
-    const { category, name, description, prices, imageUrl } = req.body;
-    const product = new Product({ category, name, description, prices, imageUrl });
+    const {category, name, description, prices, imageUrl} = req.body;
+    const product = new Product({category, name, description, prices, imageUrl});
 
     product.save().then(r => res.send(r._id)).catch(e => res.status(500).send(e));
 });
 
 app.put('/product/:id', async (req, res) => {
     const id = req.params.id;
-    const { category, name, description, price, imageUrl } = req.body;
-    Product.updateOne({ _id: id }, { category, name, description, price, imageUrl })
-        .then(r => res.send(r._id))
-        .catch(e => res.status(500).send(e));
+    const {category, name, description, price, imageUrl} = req.body;
+    Product.updateOne({_id: id}, {category, name, description, price, imageUrl})
+           .then(r => res.send(r._id))
+           .catch(e => res.status(500).send(e));
 
 });
 
 app.delete('/product/:id', async (req, res) => {
     const id = req.params.id;
-    Product.findByIdAndDelete({ _id: id })
-        .then(r => res.send(r._id))
-        .catch(e => res.status(500).send(e));
+    Product.findByIdAndDelete({_id: id})
+           .then(r => res.send(r._id))
+           .catch(e => res.status(500).send(e));
 
 });
 
