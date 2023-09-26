@@ -28,7 +28,8 @@ app.get('/products', async (req, res) => {
 
 app.get('/products/:category', async (req, res) => {
     const category = req.params.category.toLowerCase();
-    const products = await Product.find({category: category});
+    console.log(category);
+    const products = await Product.find({category: { $regex: new RegExp("^" + category, "i") }}, );
     try {
         res.send(products);
     } catch (e) {
