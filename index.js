@@ -78,8 +78,8 @@ app.post('/products', async (req, res) => {
 
 app.put('/product/:id', async (req, res) => {
     const id = req.params.id;
-    const {category, name, description, price, imageUrl} = req.body;
-    Product.updateOne({_id: id}, {category, name, description, price, imageUrl})
+    const {category, name, description, prices, imageUrl} = req.body;
+    Product.updateOne({_id: id}, {category, name, description, prices, imageUrl})
            .then(r => res.send(r._id))
            .catch(e => res.status(500).send(e));
 
